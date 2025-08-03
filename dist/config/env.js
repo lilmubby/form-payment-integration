@@ -1,4 +1,3 @@
-require("dotenv").config();
 export const config = {
     PORT: process.env.PORT || 5050,
     MONNIFY_API_KEY: process.env.MONNIFY_API_KEY,
