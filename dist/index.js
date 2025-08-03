@@ -8,7 +8,5 @@ async function startServer() {
         console.log(`Server is running on port ${PORT}`);
     });
 }
-if (require.main === module) {
-    startServer();
-}
+startServer();
 //# sourceMappingURL=index.js.map
