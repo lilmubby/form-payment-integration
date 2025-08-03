@@ -11,6 +11,14 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow specific HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
 }));
-app.use("/api/vi", paymentRoutes);
+app.use("/api/v1", paymentRoutes);
+app.get("api/v2/health-check", (req, res) => {
+  res.json("working")
+})
+app.post("api/v2/health-check", (req, res) => {
+  res.json({
+    data: req.body
+  })
+})
 
 export default app;
