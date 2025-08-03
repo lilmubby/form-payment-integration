@@ -11,7 +11,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
 }));
 app.use("/api/v1", paymentRoutes);
-app.get("api/v2/health-check", (req, res) => {
+app.get("api/v2/", (req, res) => {
     res.json("working");
 });
 app.post("api/v2/health-check", (req, res) => {
