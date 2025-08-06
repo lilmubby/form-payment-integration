@@ -2,9 +2,7 @@ import nodemailer from "nodemailer";
 import { config } from "../config/env.js";
 export class MailService {
     transporter = nodemailer.createTransport({
-        host: config.EMAIL_HOST,
-        port: config.EMAIL_PORT,
-        secure: false,
+        service: "gmail",
         auth: {
             user: config.EMAIL_USER,
             pass: config.EMAIL_PASS,

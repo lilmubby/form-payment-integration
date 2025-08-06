@@ -3,21 +3,19 @@ import { config } from "../config/env.js";
 
 export class MailService {
   private transporter = nodemailer.createTransport({
-    host: config.EMAIL_HOST,
-    port: config.EMAIL_PORT,
-    secure: false,
+    service: 'gmail',
     auth: {
       user: config.EMAIL_USER,
       pass: config.EMAIL_PASS,
     },
   });
 
-  async sendEmail(to: string, subject: string, text: string) {
+  async sendEmail(to: string, subject: string, body: string) {
     await this.transporter.sendMail({
       from: `"Payment System" <${config.EMAIL_USER}>`,
       to,
       subject,
-      text,
+      text: body,
     });
   }
 }

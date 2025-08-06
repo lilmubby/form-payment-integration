@@ -13,5 +13,6 @@ export declare const config: {
     ADMIN_EMAIL: string;
     REDIRECT_SUCCESS_URL: string;
     REDIRECT_FAILED_URL: string;
+    REDIRECT_PAYMENT_URL: string;
 };
 //# sourceMappingURL=env.d.ts.map
