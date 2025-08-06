@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 export const config = {
     PORT: process.env.PORT || 5050,
     MONNIFY_API_KEY: process.env.MONNIFY_API_KEY,
@@ -13,5 +15,6 @@ export const config = {
     ADMIN_EMAIL: process.env.ADMIN_EMAIL,
     REDIRECT_SUCCESS_URL: process.env.REDIRECT_SUCCESS_URL,
     REDIRECT_FAILED_URL: process.env.REDIRECT_FAILED_URL,
+    REDIRECT_PAYMENT_URL: process.env.REDIRECT_PAYMENT_URL,
 };
 //# sourceMappingURL=env.js.map

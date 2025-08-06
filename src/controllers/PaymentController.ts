@@ -3,18 +3,30 @@ import { MonnifyService } from "../services/MonnifyService.js";
 import { MailService } from "../services/MailService.js";
 import { config } from "../config/env.js";
 import axios from "axios";
+import catchAsync from "../util/catchAsync.js";
 
 export class PaymentController {
   private monnify = new MonnifyService();
   private mail = new MailService();
 
-  async handlePaymentStatus(req: Request, res: Response) {
+  initializePayment = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const checkoutUrl = await this.monnify.initializeTransaction(req.body);
+        res.redirect(checkoutUrl);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to initialize payment" });
+      }
+    }
+  );
+
+  async verifyPayment(req: Request, res: Response) {
     const paymentReference = req.query.paymentReference as string;
-    if (!paymentReference) return res.status(400).send("Missing payment reference");
+    if (!paymentReference)
+      return res.status(400).send("Missing payment reference");
 
     try {
-      const token = await this.monnify.getAccessToken();
-      const tx = await this.monnify.verifyTransaction(paymentReference, token);
+      const tx = await this.monnify.verifyTransaction(paymentReference);
 
       const isPaid = tx.paymentStatus === "PAID";
       const userName = tx.customerName || "Unknown";
@@ -25,19 +37,19 @@ export class PaymentController {
       const subjectStatus = isPaid ? "SUCCESS" : "FAILED";
       const subject = `[Payment ${subjectStatus}] ${userName} — ${paymentMethod}`;
       const body = `
-Hello,
+      Hello,
 
-A payment attempt has been made by:
+      A payment attempt has been made by:
 
-Name: ${userName}
-Email: ${userEmail}
-Amount: ₦${amount}
-Payment Method: ${paymentMethod}
-Status: ${subjectStatus}
+      Name: ${userName}
+      Email: ${userEmail}
+      Amount: ₦${amount}
+      Payment Method: ${paymentMethod}
+      Status: ${subjectStatus}
 
-Thank you,
-JotForm-Monnify Payment System
-`;
+      Thank you,
+      JotForm-Monnify Payment System
+      `;
 
       // Send emails
       await this.mail.sendEmail(userEmail, subject, body);
@@ -58,9 +70,14 @@ JotForm-Monnify Payment System
       }
 
       // Redirect to user
-      return res.redirect(isPaid ? config.REDIRECT_SUCCESS_URL : config.REDIRECT_FAILED_URL);
+      return res.redirect(
+        isPaid ? config.REDIRECT_SUCCESS_URL : config.REDIRECT_FAILED_URL
+      );
     } catch (err: any) {
-      console.error("Payment verification error:", err.response?.data || err.message);
+      console.error(
+        "Payment verification error:",
+        err.response?.data || err.message
+      );
       res.status(500).send("Payment processing failed");
     }
   }

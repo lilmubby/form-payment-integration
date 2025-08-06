@@ -2,8 +2,9 @@ import { Router } from "express";
 import { PaymentController } from "../controllers/PaymentController.js";
 
 const router = Router();
-const controller = new PaymentController();
+const paymentController = new PaymentController();
 
-router.get("/payment-status", controller.handlePaymentStatus.bind(controller));
+router.post("/initialize", paymentController.initializePayment);
+router.get("/verify", paymentController.verifyPayment);
 
 export default router;

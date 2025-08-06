@@ -3,16 +3,25 @@ import { MonnifyService } from "../services/MonnifyService.js";
 import { MailService } from "../services/MailService.js";
 import { config } from "../config/env.js";
 import axios from "axios";
+import catchAsync from "../util/catchAsync.js";
 export class PaymentController {
     monnify = new MonnifyService();
     mail = new MailService();
-    async handlePaymentStatus(req, res) {
+    initializePayment = catchAsync(async (req, res) => {
+        try {
+            const checkoutUrl = await this.monnify.initializeTransaction(req.body);
+            res.redirect(checkoutUrl);
+        }
+        catch (error) {
+            res.status(500).json({ error: "Failed to initialize payment" });
+        }
+    });
+    async verifyPayment(req, res) {
         const paymentReference = req.query.paymentReference;
         if (!paymentReference)
             return res.status(400).send("Missing payment reference");
         try {
-            const token = await this.monnify.getAccessToken();
-            const tx = await this.monnify.verifyTransaction(paymentReference, token);
+            const tx = await this.monnify.verifyTransaction(paymentReference);
             const isPaid = tx.paymentStatus === "PAID";
             const userName = tx.customerName || "Unknown";
             const userEmail = tx.customerEmail || "unknown@example.com";
@@ -21,19 +30,19 @@ export class PaymentController {
             const subjectStatus = isPaid ? "SUCCESS" : "FAILED";
             const subject = `[Payment ${subjectStatus}] ${userName} — ${paymentMethod}`;
             const body = `
-Hello,
+      Hello,
 
-A payment attempt has been made by:
+      A payment attempt has been made by:
 
-Name: ${userName}
-Email: ${userEmail}
-Amount: ₦${amount}
-Payment Method: ${paymentMethod}
-Status: ${subjectStatus}
+      Name: ${userName}
+      Email: ${userEmail}
+      Amount: ₦${amount}
+      Payment Method: ${paymentMethod}
+      Status: ${subjectStatus}
 
-Thank you,
-JotForm-Monnify Payment System
-`;
+      Thank you,
+      JotForm-Monnify Payment System
+      `;
             // Send emails
             await this.mail.sendEmail(userEmail, subject, body);
             await this.mail.sendEmail(config.ADMIN_EMAIL, subject, body);

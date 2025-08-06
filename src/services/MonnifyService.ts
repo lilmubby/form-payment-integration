@@ -14,7 +14,32 @@ export class MonnifyService {
     return res.data.responseBody.accessToken;
   }
 
-  async verifyTransaction(paymentReference: string, token: string) {
+  async initializeTransaction(data: any): Promise<string> {
+    const token = await this.getAccessToken();
+
+    const paymentReference = `REF-${Date.now()}`
+    
+    const payload = {
+      amount: data.amount,
+      customerName: data.name,
+      customerEmail: data.email,
+      paymentReference,
+      paymentDescription: "Form Payment",
+      currencyCode: "NGN",
+      // contractCode: this.contractCode,
+      redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+    };
+
+    const response = await axios.post(`${config.MONNIFY_BASE_URL}/merchant/transactions/init-transaction`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.responseBody.checkoutUrl;
+  }
+
+  async verifyTransaction(paymentReference: string) {
+    const token = await this.getAccessToken();
+
     const res = await axios.get(`${this.baseUrl}/api/v2/transactions/${paymentReference}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
