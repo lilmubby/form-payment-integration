@@ -12,7 +12,9 @@ export class PaymentController {
   initializePayment = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
       try {
+        console.log(req.body)
         const checkoutUrl = await this.monnify.initializeTransaction(req.body);
+        console.log(checkoutUrl)
         res.redirect(checkoutUrl);
       } catch (error) {
         res.status(500).json({ error: "Failed to initialize payment" });

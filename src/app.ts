@@ -1,5 +1,5 @@
 import express from "express";
-import paymentRoutes from "./routes/payment.route.js";
+import routes from "./routes/index.route.js";
 import cors from "cors";
 import { MailService } from "./services/MailService.js";
 
@@ -14,7 +14,7 @@ app.use(cors({
 }));
 
 
-app.use("/api/v1", paymentRoutes);
+app.use("/api/v1", routes);
 
 const mail = new MailService();
 

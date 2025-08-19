@@ -8,8 +8,6 @@ export const config = {
     MONNIFY_BASE_URL: process.env.MONNIFY_BASE_URL,
     JOTFORM_API_KEY: process.env.JOTFORM_API_KEY,
     JOTFORM_FORM_ID: process.env.JOTFORM_FORM_ID,
-    EMAIL_HOST: process.env.EMAIL_HOST,
-    EMAIL_PORT: Number(process.env.EMAIL_PORT),
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
     ADMIN_EMAIL: process.env.ADMIN_EMAIL,
