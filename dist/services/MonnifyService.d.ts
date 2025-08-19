@@ -2,7 +2,8 @@ export declare class MonnifyService {
     private baseUrl;
     private apiKey;
     private secretKey;
-    getAccessToken(): Promise<string>;
+    private contractCode;
+    private getAccessToken;
     initializeTransaction(data: any): Promise<string>;
     verifyTransaction(paymentReference: string): Promise<any>;
 }

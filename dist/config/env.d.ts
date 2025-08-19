@@ -6,8 +6,6 @@ export declare const config: {
     MONNIFY_BASE_URL: string;
     JOTFORM_API_KEY: string;
     JOTFORM_FORM_ID: string;
-    EMAIL_HOST: string;
-    EMAIL_PORT: number;
     EMAIL_USER: string;
     EMAIL_PASS: string;
     ADMIN_EMAIL: string;

@@ -4,14 +4,19 @@ export class MonnifyService {
     baseUrl = config.MONNIFY_BASE_URL;
     apiKey = config.MONNIFY_API_KEY;
     secretKey = config.MONNIFY_SECRET_KEY;
+    contractCode = config.MONNIFY_CONTRACT_CODE;
     async getAccessToken() {
-        const res = await axios.post(`${this.baseUrl}/api/v1/auth/login`, {
-            apiKey: this.apiKey,
-            secretKey: this.secretKey,
+        console.log("access token", this.baseUrl);
+        const authString = Buffer.from(`${this.apiKey}:${this.secretKey}`).toString("base64");
+        const res = await axios.post(`${this.baseUrl}/api/v1/auth/login`, {}, {
+            headers: {
+                Authorization: `Basic ${authString}`
+            }
         });
         return res.data.responseBody.accessToken;
     }
     async initializeTransaction(data) {
+        console.log("initialze payment");
         const token = await this.getAccessToken();
         const paymentReference = `REF-${Date.now()}`;
         const payload = {
@@ -21,8 +26,9 @@ export class MonnifyService {
             paymentReference,
             paymentDescription: "Form Payment",
             currencyCode: "NGN",
-            // contractCode: this.contractCode,
+            contractCode: this.contractCode,
             redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+            paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
         };
         const response = await axios.post(`${config.MONNIFY_BASE_URL}/merchant/transactions/init-transaction`, payload, {
             headers: { Authorization: `Bearer ${token}` },

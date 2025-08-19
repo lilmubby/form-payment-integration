@@ -1,5 +1,5 @@
 import express from "express";
-import paymentRoutes from "./routes/payment.route.js";
+import routes from "./routes/index.route.js";
 import cors from "cors";
 import { MailService } from "./services/MailService.js";
 const app = express();
@@ -11,7 +11,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow specific HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
 }));
-app.use("/api/v1", paymentRoutes);
+app.use("/api/v1", routes);
 const mail = new MailService();
 app.get("/email", async (req, res) => {
     await mail.sendEmail("ymubarak247@gmail.com", "[Test] --Subject", "This is just a test");

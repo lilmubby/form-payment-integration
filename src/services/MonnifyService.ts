@@ -5,32 +5,39 @@ export class MonnifyService {
   private baseUrl = config.MONNIFY_BASE_URL;
   private apiKey = config.MONNIFY_API_KEY;
   private secretKey = config.MONNIFY_SECRET_KEY;
+  private contractCode = config.MONNIFY_CONTRACT_CODE;
 
-  async getAccessToken(): Promise<string> {
-    const res = await axios.post(`${this.baseUrl}/api/v1/auth/login`, {
-      apiKey: this.apiKey,
-      secretKey: this.secretKey,
+  private async getAccessToken(): Promise<string> {
+    const authString = Buffer.from(`${this.apiKey}:${this.secretKey}`).toString("base64");
+
+    const res = await axios.post(`${this.baseUrl}/api/v1/auth/login`, {}, {
+      headers: {
+        Authorization: `Basic ${authString}`
+      }
     });
+
     return res.data.responseBody.accessToken;
   }
 
   async initializeTransaction(data: any): Promise<string> {
     const token = await this.getAccessToken();
-
+    
     const paymentReference = `REF-${Date.now()}`
     
     const payload = {
       amount: data.amount,
-      customerName: data.name,
-      customerEmail: data.email,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
       paymentReference,
       paymentDescription: "Form Payment",
       currencyCode: "NGN",
-      // contractCode: this.contractCode,
-      redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+      contractCode: this.contractCode,
+      // redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+      redirectUrl: `${config.REDIRECT_PAYMENT_URL}`,
+      paymentMethods: ["CARD","ACCOUNT_TRANSFER"],
     };
 
-    const response = await axios.post(`${config.MONNIFY_BASE_URL}/merchant/transactions/init-transaction`, payload, {
+    const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
