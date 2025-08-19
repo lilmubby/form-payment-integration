@@ -26,8 +26,8 @@ export class MonnifyService {
     
     const payload = {
       amount: data.amount,
-      customerName: data.customerName,
-      customerEmail: data.customerEmail,
+      customerName: `${data.first} ${data.last}`,
+      customerEmail: data.email,
       paymentReference,
       paymentDescription: "Form Payment",
       currencyCode: "NGN",
@@ -35,8 +35,19 @@ export class MonnifyService {
       // redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
       redirectUrl: `${config.REDIRECT_PAYMENT_URL}`,
       paymentMethods: ["CARD","ACCOUNT_TRANSFER"],
+      metaData: {
+        firstName: data.first,
+        lastName: data.last,
+        email: data.email,
+        phone: data.phone,
+        amount: data.amount,
+        paymentReference,
+        submission_id: data.submission_id,
+        deliverytype: data.deliverytype,
+        deliveryaddress: data?.deliveryaddress || "",
+        ip: data.ip || "",
+      }
     };
-
     const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
