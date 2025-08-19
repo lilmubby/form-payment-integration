@@ -36,8 +36,8 @@ export class MonnifyService {
       redirectUrl: `${config.REDIRECT_PAYMENT_URL}`,
       paymentMethods: ["CARD","ACCOUNT_TRANSFER"],
       metaData: {
-        firstName: data.first,
-        lastName: data.last,
+        firstName: data.name.first,
+        lastName: data.name.last,
         email: data.email,
         phone: data.phone,
         amount: data.amount,
