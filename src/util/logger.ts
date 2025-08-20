@@ -9,7 +9,9 @@ const logger = createLogger({
     })
   ),
   transports: [
-    new transports.Console(), // stdout → Render captures this
+    new transports.Console({
+      format: format.simple(),
+    }), // stdout → Render captures this
     new transports.File({ filename: "logs/error.log", level: "error" }),
     new transports.File({ filename: "logs/combined.log" }),
   ],
