@@ -6,7 +6,6 @@ export class MonnifyService {
     secretKey = config.MONNIFY_SECRET_KEY;
     contractCode = config.MONNIFY_CONTRACT_CODE;
     async getAccessToken() {
-        console.log("access token", this.baseUrl);
         const authString = Buffer.from(`${this.apiKey}:${this.secretKey}`).toString("base64");
         const res = await axios.post(`${this.baseUrl}/api/v1/auth/login`, {}, {
             headers: {
@@ -16,21 +15,33 @@ export class MonnifyService {
         return res.data.responseBody.accessToken;
     }
     async initializeTransaction(data) {
-        console.log("initialze payment");
         const token = await this.getAccessToken();
         const paymentReference = `REF-${Date.now()}`;
         const payload = {
             amount: data.amount,
-            customerName: data.name,
+            customerName: `${data.first} ${data.last}`,
             customerEmail: data.email,
             paymentReference,
             paymentDescription: "Form Payment",
             currencyCode: "NGN",
             contractCode: this.contractCode,
-            redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+            // redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
+            redirectUrl: `${config.REDIRECT_PAYMENT_URL}`,
             paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
+            metaData: {
+                firstName: data.name.first,
+                lastName: data.name.last,
+                email: data.email,
+                phone: data.phone,
+                amount: data.amount,
+                paymentReference,
+                submission_id: data.submission_id,
+                deliverytype: data.deliverytype,
+                deliveryaddress: data?.deliveryaddress || "",
+                ip: data.ip || "",
+            }
         };
-        const response = await axios.post(`${config.MONNIFY_BASE_URL}/merchant/transactions/init-transaction`, payload, {
+        const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, payload, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.data.responseBody.checkoutUrl;

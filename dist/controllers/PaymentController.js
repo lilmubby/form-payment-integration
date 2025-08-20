@@ -10,6 +10,7 @@ export class PaymentController {
     initializePayment = catchAsync(async (req, res) => {
         try {
             const checkoutUrl = await this.monnify.initializeTransaction(req.body);
+            console.log(checkoutUrl);
             res.redirect(checkoutUrl);
         }
         catch (error) {

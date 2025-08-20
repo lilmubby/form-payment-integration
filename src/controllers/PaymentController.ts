@@ -4,6 +4,7 @@ import { MailService } from "../services/MailService.js";
 import { config } from "../config/env.js";
 import axios from "axios";
 import catchAsync from "../util/catchAsync.js";
+import logger from "../util/logger.js";
 
 export class PaymentController {
   private monnify = new MonnifyService();
@@ -12,8 +13,8 @@ export class PaymentController {
   initializePayment = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
       try {
+        logger.info("Initializing payment with data:", { body: req.body });
         const checkoutUrl = await this.monnify.initializeTransaction(req.body);
-        console.log(checkoutUrl)
         res.redirect(checkoutUrl);
       } catch (error) {
         res.status(500).json({ error: "Failed to initialize payment" });

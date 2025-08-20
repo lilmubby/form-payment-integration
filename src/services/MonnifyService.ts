@@ -1,6 +1,10 @@
 import axios from "axios";
 import { config } from "../config/env.js";
+import logger from "../util/logger.js";
 
+/**
+ * Service to interact with Monnify API for payment transactions
+ */
 export class MonnifyService {
   private baseUrl = config.MONNIFY_BASE_URL;
   private apiKey = config.MONNIFY_API_KEY;
@@ -51,6 +55,7 @@ export class MonnifyService {
     const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    logger.info("Monnify transaction initialized: \n", { body: response.data });
 
     return response.data.responseBody.checkoutUrl;
   }
