@@ -19,7 +19,7 @@ export class PaymentController {
             res.status(500).json({ error, body: req.body });
         }
     });
-    async verifyPayment(req, res) {
+    verifyPayment = catchAsync(async (req, res) => {
         const paymentReference = req.query.paymentReference;
         if (!paymentReference)
             return res.status(400).send("Missing payment reference");
@@ -27,7 +27,7 @@ export class PaymentController {
             const tx = await this.monnify.verifyTransaction(paymentReference);
             const isPaid = tx.paymentStatus === "PAID";
             const userName = tx.customerName || "Unknown";
-            const userEmail = tx.customerEmail || "unknown@example.com";
+            const userEmail = tx.customer.email || "";
             const paymentMethod = tx.paymentMethod || "N/A";
             const amount = tx.amount || 0;
             const subjectStatus = isPaid ? "SUCCESS" : "FAILED";
@@ -66,6 +66,6 @@ export class PaymentController {
             console.error("Payment verification error:", err.response?.data || err.message);
             res.status(500).send("Payment processing failed");
         }
-    }
+    });
 }
 //# sourceMappingURL=PaymentController.js.map

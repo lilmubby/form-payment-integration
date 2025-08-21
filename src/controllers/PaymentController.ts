@@ -15,7 +15,7 @@ export class PaymentController {
       try {
         logger.info("Initializing payment with data:", { body: req.body });
         const checkoutUrl = await this.monnify.initializeTransaction(req.body);
-        logger.info("Checkout URL generated:", {body: checkoutUrl});
+        logger.info("Checkout URL generated:", { body: checkoutUrl });
         res.redirect(checkoutUrl);
       } catch (error) {
         res.status(500).json({ error, body: req.body });
@@ -23,7 +23,7 @@ export class PaymentController {
     }
   );
 
-  async verifyPayment(req: Request, res: Response) {
+  verifyPayment = catchAsync(async (req: Request, res: Response) => {
     const paymentReference = req.query.paymentReference as string;
     if (!paymentReference)
       return res.status(400).send("Missing payment reference");
@@ -33,7 +33,7 @@ export class PaymentController {
 
       const isPaid = tx.paymentStatus === "PAID";
       const userName = tx.customerName || "Unknown";
-      const userEmail = tx.customerEmail || "unknown@example.com";
+      const userEmail = tx.customer.email || "";
       const paymentMethod = tx.paymentMethod || "N/A";
       const amount = tx.amount || 0;
 
@@ -83,5 +83,5 @@ export class PaymentController {
       );
       res.status(500).send("Payment processing failed");
     }
-  }
+  });
 }
