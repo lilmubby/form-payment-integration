@@ -16,7 +16,7 @@ app.use(cors({
 console.log("🚀 Starting server...");
 app.use(morgan("combined", {
     stream: {
-        write: (message) => logger.info("Morgan" + message.trim()),
+        write: (message) => logger.info("[Morgan]" + message.trim()),
     },
 }));
 app.use("/api/v1", routes);
@@ -28,7 +28,6 @@ app.get("/email", async (req, res) => {
 app.get("/", (req, res) => {
     logger.info("Root endpoint hit");
     res.json("Monnify JotForm Backend Running");
-    // res.redirect("https://google.com")
 });
 export default app;
 //# sourceMappingURL=app.js.map
