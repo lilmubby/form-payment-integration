@@ -3,6 +3,6 @@ export declare class PaymentController {
     private monnify;
     private mail;
     initializePayment: (req: Request, res: Response, next: import("express").NextFunction) => void;
-    verifyPayment(req: Request, res: Response): Promise<void | Response<any, Record<string, any>>>;
+    verifyPayment: (req: Request, res: Response, next: import("express").NextFunction) => void;
 }
 //# sourceMappingURL=PaymentController.d.ts.map
