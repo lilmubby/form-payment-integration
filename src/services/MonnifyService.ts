@@ -27,17 +27,19 @@ export class MonnifyService {
     const token = await this.getAccessToken();
     
     const paymentReference = `REF-${Date.now()}`
+    const customerName = `${data.name.first} ${data.name.last}`;
+    const redirectUrl = process.env.MONNIFY_REDIRECT_URL;
     
     const body = {
       amount: data.amount,
-      customerName: `${data.name.first} ${data.name.last}`,
+      customerName,
       customerEmail: data.email,
       paymentReference,
       paymentDescription: "Form Payment",
       currencyCode: "NGN",
       contractCode: this.contractCode,
       // redirectUrl: `${config.REDIRECT_PAYMENT_URL}?${paymentReference}`,
-      redirectUrl: `${config.REDIRECT_PAYMENT_URL}`,
+      redirectUrl,
       paymentMethods: ["CARD","ACCOUNT_TRANSFER"],
       metaData: {
         firstName: data.name.first,
