@@ -15,6 +15,7 @@ export class PaymentController {
       try {
         logger.info("Initializing payment with data:", { body: req.body });
         const checkoutUrl = await this.monnify.initializeTransaction(req.body);
+        logger.info("Checkout URL generated:", {body: checkoutUrl});
         res.redirect(checkoutUrl);
       } catch (error) {
         res.status(500).json({ error, body: req.body });

@@ -28,9 +28,9 @@ export class MonnifyService {
     
     const paymentReference = `REF-${Date.now()}`
     
-    const payload = {
+    const body = {
       amount: data.amount,
-      customerName: `${data.first} ${data.last}`,
+      customerName: `${data.name.first} ${data.name.last}`,
       customerEmail: data.email,
       paymentReference,
       paymentDescription: "Form Payment",
@@ -52,7 +52,7 @@ export class MonnifyService {
         ip: data.ip || "",
       }
     };
-    const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, payload, {
+    const response = await axios.post(`${config.MONNIFY_BASE_URL}/api/v1/merchant/transactions/init-transaction`, body, {
       headers: { Authorization: `Bearer ${token}` },
     });
     logger.info("Monnify transaction initialized: \n", { body: response.data });

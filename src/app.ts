@@ -19,7 +19,7 @@ console.log("🚀 Starting server...");
 
 app.use(morgan("combined", {
   stream: {
-    write: (message: string) => logger.info("Morgan" +message.trim()),
+    write: (message: string) => logger.info("[Morgan]" +message.trim()),
   },
 }));
 
@@ -36,7 +36,6 @@ app.get("/email", async (req, res) => {
 app.get("/", (req, res) => {
   logger.info("Root endpoint hit");
   res.json("Monnify JotForm Backend Running")
-  // res.redirect("https://google.com")
 })
 
 export default app;
