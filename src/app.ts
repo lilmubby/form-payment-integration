@@ -15,6 +15,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
 }));
 
+console.log("🚀 Starting server...");
+
 app.use(morgan("combined", {
   stream: {
     write: (message: string) => logger.info("Morgan" +message.trim()),
