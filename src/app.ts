@@ -34,6 +34,7 @@ app.get("/email", async (req, res) => {
 })
 
 app.get("/", (req, res) => {
+  logger.info("Root endpoint hit");
   res.json("Monnify JotForm Backend Running")
   // res.redirect("https://google.com")
 })
