@@ -1,3 +1,6 @@
+/**
+ * Service to interact with Monnify API for payment transactions
+ */
 export declare class MonnifyService {
     private baseUrl;
     private apiKey;
