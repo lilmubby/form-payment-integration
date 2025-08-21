@@ -17,7 +17,7 @@ export class PaymentController {
         const checkoutUrl = await this.monnify.initializeTransaction(req.body);
         res.redirect(checkoutUrl);
       } catch (error) {
-        res.status(500).json({ error: "Failed to initialize payment" });
+        res.status(500).json({ error, body: req.body });
       }
     }
   );
