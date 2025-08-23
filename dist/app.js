@@ -1,7 +1,7 @@
 import express from "express";
 import routes from "./routes/index.route.js";
 import cors from "cors";
-import { MailService } from "./services/MailService.js";
+import { MailService } from "./services/Mail.service.js";
 import morgan from "morgan";
 import logger from "./util/logger.js";
 import { config } from "./config/env.js";
