@@ -30,33 +30,19 @@ export class PaymentController {
 
     try {
       const tx = await this.monnify.verifyTransaction(paymentReference);
-
       const isPaid = tx.paymentStatus === "PAID";
-      const userName = tx.customerName || "Unknown";
-      const userEmail = tx.customer.email || "";
-      const paymentMethod = tx.paymentMethod || "N/A";
-      const amount = tx.amount || 0;
-
-      const subjectStatus = isPaid ? "SUCCESS" : "FAILED";
-      const subject = `[Payment ${subjectStatus}] ${userName} — ${paymentMethod}`;
-      const body = `
-      Hello,
-
-      A payment attempt has been made by:
-
-      Name: ${userName}
-      Email: ${userEmail}
-      Amount: ₦${amount}
-      Payment Method: ${paymentMethod}
-      Status: ${subjectStatus}
-
-      Thank you,
-      JotForm-Monnify Payment System
-      `;
-
       // Send emails
-      await this.mail.sendEmail(userEmail, subject, body);
-      await this.mail.sendEmail(config.ADMIN_EMAIL, subject, body);
+      await this.mail.sendEmail(tx);
+
+      const meta = tx.metaData;
+      const firstName = meta?.firstName || "Unknown";
+      const lastName = meta?.lastName || "Unknown";
+      const submission_id = meta?.submission_id || "";
+      const amount = tx.amountPaid || 0;
+      const deliverytype = meta?.deliveryType || "";
+      const email = meta?.email || "";
+
+
 
       // Submit to JotForm only on success
       if (isPaid) {
@@ -64,9 +50,7 @@ export class PaymentController {
           `https://api.jotform.com/form/${config.JOTFORM_FORM_ID}/submissions?apiKey=${config.JOTFORM_API_KEY}`,
           {
             submission: {
-              q1_name: userName,
-              q2_email: userEmail,
-              q3_amount: amount,
+              ...meta
             },
           }
         );

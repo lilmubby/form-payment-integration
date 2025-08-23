@@ -15,6 +15,7 @@ export const config = {
   EMAIL_USER: process.env.EMAIL_USER!,
   EMAIL_PASS: process.env.EMAIL_PASS!,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL!,
+  TEST_USER_EMAIL: process.env.TEST_USER_EMAIL!,
   
   REDIRECT_SUCCESS_URL: process.env.REDIRECT_SUCCESS_URL!,
   REDIRECT_FAILED_URL: process.env.REDIRECT_FAILED_URL!,

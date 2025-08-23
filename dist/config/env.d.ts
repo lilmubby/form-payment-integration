@@ -9,6 +9,7 @@ export declare const config: {
     EMAIL_USER: string;
     EMAIL_PASS: string;
     ADMIN_EMAIL: string;
+    TEST_USER_EMAIL: string;
     REDIRECT_SUCCESS_URL: string;
     REDIRECT_FAILED_URL: string;
     REDIRECT_PAYMENT_URL: string;

@@ -4,6 +4,7 @@ import cors from "cors";
 import { MailService } from "./services/MailService.js";
 import morgan from "morgan";
 import logger from "./util/logger.js";
+import { config } from "./config/env.js";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,7 +23,12 @@ app.use(morgan("combined", {
 app.use("/api/v1", routes);
 const mail = new MailService();
 app.get("/email", async (req, res) => {
-    await mail.sendEmail("ymubarak247@gmail.com", "[Test] --Subject", "This is just a test");
+    await mail.sendEmail({
+        paymentStatus: "PAID",
+        amount: 15000,
+        customer: { email: config.TEST_USER_EMAIL, name: "Test User" },
+        paymentMethod: "Card",
+    });
     res.send("Sent");
 });
 app.get("/", (req, res) => {
